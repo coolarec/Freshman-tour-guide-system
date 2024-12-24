@@ -1,0 +1,46 @@
+[
+    {
+        "id": 1,
+        "info": "The main administrative building of the school.",
+        "name": "Main Building",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 5,
+        "visable": true
+    },
+    {
+        "id": 2,
+        "info": "The main administrative building of the school.",
+        "name": "ing",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 5,
+        "visable": true
+    },
+    {
+        "id": 3,
+        "info": "The main administrative building of the school.",
+        "name": "ing",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 5,
+        "visable": true
+    },
+    {
+        "id": 4,
+        "info": "The main administrative building of the school.",
+        "name": "ing",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 5,
+        "visable": true
+    }
+]
