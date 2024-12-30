@@ -1,6 +1,17 @@
 [
     {
         "id": 1,
+        "info": "更新后",
+        "name": "测试更新功能",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 0,
+        "visable": true
+    },
+    {
+        "id": 2,
         "info": "The main administrative building of the school.",
         "name": "Main Building",
         "position": [
@@ -11,20 +22,9 @@
         "visable": true
     },
     {
-        "id": 2,
-        "info": "The main administrative building of the school.",
-        "name": "ing",
-        "position": [
-            1.0,
-            2.0
-        ],
-        "tag": 5,
-        "visable": true
-    },
-    {
         "id": 3,
         "info": "The main administrative building of the school.",
-        "name": "ing",
+        "name": "Main Building",
         "position": [
             1.0,
             2.0
@@ -35,7 +35,51 @@
     {
         "id": 4,
         "info": "The main administrative building of the school.",
-        "name": "ing",
+        "name": "Main Building",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 5,
+        "visable": true
+    },
+    {
+        "id": 5,
+        "info": "The main administrative building of the school.",
+        "name": "Main Building",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 5,
+        "visable": true
+    },
+    {
+        "id": 6,
+        "info": "The main administrative building of the school.",
+        "name": "Main Building",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 5,
+        "visable": true
+    },
+    {
+        "id": 7,
+        "info": "The main administrative building of the school.",
+        "name": "Main Building",
+        "position": [
+            1.0,
+            2.0
+        ],
+        "tag": 5,
+        "visable": true
+    },
+    {
+        "id": 8,
+        "info": "The main administrative building of the school.",
+        "name": "Main Building",
         "position": [
             1.0,
             2.0

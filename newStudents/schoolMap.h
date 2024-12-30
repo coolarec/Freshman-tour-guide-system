@@ -16,7 +16,7 @@ public:
         std::array<double, 2> position; // 景点坐标
         int tag; // 景点标签，是否为教学楼，体育馆等
         bool visable; // 景点是否可见
-
+    
         SchoolAttraction(int id, const std::string& name, const std::string& info,
             const std::array<double, 2>& position, int tag, bool visable);
 		SchoolAttraction() = default;
@@ -26,19 +26,24 @@ public:
 
     struct SchoolPath {
         int id; // 道路编号
+        std::string name;
 		int from;//起点景点编号
 		int to;//终点景点编号
 		double length; // 道路长度
 		bool walk=0, sharebike=0, bus=0; // 是否可步行，骑行，乘坐校车
-        SchoolPath(int id, int from, int to, double length, bool walk, bool sharebike, bool bus);
+        SchoolPath(int id,std::string name, int from, int to, double length, bool walk, bool sharebike, bool bus);
         SchoolPath() = default;
         nlohmann::json to_json() const;
         static SchoolPath from_json(const nlohmann::json& j);
+
+		bool operator<(const SchoolPath& path) const {
+			return length < path.length;
+		}
     };
 private:
     std::map<int, SchoolAttraction> attractions;
     std::map<int, SchoolPath>paths;
-    std::map<int, std::vector<SchoolPath>> destination;
+    std::map<int, std::vector<SchoolPath>> destinations;
 
 public:
 	int current_attraction_id = 0,current_path_id=0;
@@ -55,4 +60,16 @@ public:
     void deleteAttraction(int id);
 	int updateAttraction(int id, const std::string& name, const std::string& info,
 		const std::array<double, 2>& position, int tag, bool visable);
+	//道路操作
+    nlohmann::json getPaths(int from);
+    nlohmann::json getAllPaths()const;
+	void addPath(std::string name,int from, int to, double length, bool walk, bool sharebike, bool bus);
+	void deletePath(int id);
+	void updatePath(int id,std::string name, int from, int to, double length, bool walk, bool sharebike, bool bus);
+	
+	//完成最短路相关操作
+    //nlohmann::json getPathBetween(int from, int to);
+    //nlohmann::json dijkstra(int from, int to);
+
+	//void floyd(std::vector<std::vector<double>>& dist, std::vector<std::vector<int>>& path);
 };
