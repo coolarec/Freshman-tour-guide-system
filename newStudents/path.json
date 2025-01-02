@@ -28,5 +28,25 @@
         "sharebike": true,
         "to": 5,
         "walk": true
+    },
+    {
+        "bus": true,
+        "from": 4,
+        "id": 4,
+        "length": 45.0,
+        "name": "sadsda",
+        "sharebike": true,
+        "to": 5,
+        "walk": true
+    },
+    {
+        "bus": true,
+        "from": 5,
+        "id": 5,
+        "length": 45.0,
+        "name": "sadsda",
+        "sharebike": true,
+        "to": 4,
+        "walk": true
     }
 ]

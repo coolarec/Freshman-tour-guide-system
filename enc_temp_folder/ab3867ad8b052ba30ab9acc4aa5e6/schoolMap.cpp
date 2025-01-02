@@ -208,8 +208,7 @@ void SchoolMap::addAttraction(const std::string& name, const std::string& info,
 	int id = ++current_attraction_id;
 	SchoolAttraction newAttraction(id, name, info, position, tag, visable);
 	attractions[id] = newAttraction;
-	//std::cout << "addAttraction" << std::endl;
-
+	std::cout << "addAttraction" << std::endl;
 	saveToFile();
 }
 

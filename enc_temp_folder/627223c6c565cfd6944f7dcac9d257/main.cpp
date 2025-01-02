@@ -26,7 +26,7 @@ int main() {
 
     svr.Post("/addArractions", [&](const Request& req, Response& res) {
 		json j = json::parse(req.body);
-        //std::cout << j.dump() << std::endl;
+        std::cout << j.dump() << std::endl;
 		auto name = j.at("name").get<std::string>();
 		auto info = j.at("info").get<std::string>();
 		auto position = j.at("position").get<std::array<double, 2>>();

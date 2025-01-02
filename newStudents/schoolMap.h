@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <array>
-
+#include<queue>
 class SchoolMap {
 public:
     struct SchoolAttraction {
@@ -40,6 +40,7 @@ public:
 			return length < path.length;
 		}
     };
+    
 private:
     std::map<int, SchoolAttraction> attractions;
     std::map<int, SchoolPath>paths;
@@ -49,10 +50,11 @@ public:
 	int current_attraction_id = 0,current_path_id=0;
     SchoolMap();
 
-    //文件操作
+    //文件操作，初始化
     void loadFromFile(const std::string& attractionFilename = "attraction.json", const std::string& pathFilename="path.json");
     void saveToFile(const std::string& attractionFilename = "attraction.json", const std::string& pathFilename = "path.json");
-	//景点操作
+	
+    //景点操作
     nlohmann::json getVisibleAttractions() const;
     nlohmann::json getAllAttractions() const;
     void addAttraction(const std::string& name, const std::string& info,
@@ -60,16 +62,16 @@ public:
     void deleteAttraction(int id);
 	int updateAttraction(int id, const std::string& name, const std::string& info,
 		const std::array<double, 2>& position, int tag, bool visable);
-	//道路操作
+	
+    //道路操作
     nlohmann::json getPaths(int from);
     nlohmann::json getAllPaths()const;
 	void addPath(std::string name,int from, int to, double length, bool walk, bool sharebike, bool bus);
 	void deletePath(int id);
 	void updatePath(int id,std::string name, int from, int to, double length, bool walk, bool sharebike, bool bus);
-	
+	 
 	//完成最短路相关操作
-    //nlohmann::json getPathBetween(int from, int to);
+    //nlohmann::json getShortestPath(int from, int to);
+	nlohmann::json getShortestPath(int from, int to, bool walk=true, bool sharebike=true, bool bus=true);//限制交通方式
     //nlohmann::json dijkstra(int from, int to);
-
-	//void floyd(std::vector<std::vector<double>>& dist, std::vector<std::vector<int>>& path);
 };

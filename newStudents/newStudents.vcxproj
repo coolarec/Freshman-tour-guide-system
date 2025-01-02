@@ -131,10 +131,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="busRoute.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="schoolMap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="busRoute.h" />
     <ClInclude Include="C:\Users\Administrator\Downloads\cpp-httplib-0.18.3\cpp-httplib-0.18.3\httplib.h" />
     <ClInclude Include="include\nlohmann\json.hpp" />
     <ClInclude Include="schoolMap.h" />

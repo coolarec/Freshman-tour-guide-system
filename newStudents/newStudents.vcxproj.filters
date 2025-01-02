@@ -21,6 +21,9 @@
     <ClCompile Include="schoolMap.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="busRoute.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="schoolMap.h">
@@ -30,6 +33,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\Administrator\Downloads\cpp-httplib-0.18.3\cpp-httplib-0.18.3\httplib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="busRoute.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
