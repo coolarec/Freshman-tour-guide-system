@@ -7,15 +7,16 @@
 #include <iostream>
 #include <array>
 #include<queue>
+#include<climits>
 class SchoolMap {
 public:
     struct SchoolAttraction {
-        int id; // ¾°µã±àºÅ
-        std::string name; // ¾°µãÃû³Æ
-        std::string info; // ¾°µãÐÅÏ¢½éÉÜ
-        std::array<double, 2> position; // ¾°µã×ø±ê
-        int tag; // ¾°µã±êÇ©£¬ÊÇ·ñÎª½ÌÑ§Â¥£¬ÌåÓý¹ÝµÈ
-        bool visable; // ¾°µãÊÇ·ñ¿É¼û
+        int id; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        std::string name; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        std::string info; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
+        std::array<double, 2> position; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        int tag; // ï¿½ï¿½ï¿½ï¿½ï¿½Ç©ï¿½ï¿½ï¿½Ç·ï¿½Îªï¿½ï¿½Ñ§Â¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½
+        bool visable; // ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½É¼ï¿½
     
         SchoolAttraction(int id, const std::string& name, const std::string& info,
             const std::array<double, 2>& position, int tag, bool visable);
@@ -25,12 +26,12 @@ public:
     };
 
     struct SchoolPath {
-        int id; // µÀÂ·±àºÅ
+        int id; // ï¿½ï¿½Â·ï¿½ï¿½ï¿½
         std::string name;
-		int from;//Æðµã¾°µã±àºÅ
-		int to;//ÖÕµã¾°µã±àºÅ
-		double length; // µÀÂ·³¤¶È
-		bool walk=0, sharebike=0, bus=0; // ÊÇ·ñ¿É²½ÐÐ£¬ÆïÐÐ£¬³Ë×øÐ£³µ
+		int from;//ï¿½ï¿½ã¾°ï¿½ï¿½ï¿½ï¿½
+		int to;//ï¿½Õµã¾°ï¿½ï¿½ï¿½ï¿½
+		double length; // ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
+		bool walk=0, sharebike=0, bus=0; // ï¿½Ç·ï¿½É²ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½
         SchoolPath(int id,std::string name, int from, int to, double length, bool walk, bool sharebike, bool bus);
         SchoolPath() = default;
         nlohmann::json to_json() const;
@@ -50,11 +51,11 @@ public:
 	int current_attraction_id = 0,current_path_id=0;
     SchoolMap();
 
-    //ÎÄ¼þ²Ù×÷£¬³õÊ¼»¯
+    //ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
     void loadFromFile(const std::string& attractionFilename = "attraction.json", const std::string& pathFilename="path.json");
     void saveToFile(const std::string& attractionFilename = "attraction.json", const std::string& pathFilename = "path.json");
 	
-    //¾°µã²Ù×÷
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     nlohmann::json getVisibleAttractions() const;
     nlohmann::json getAllAttractions() const;
     void addAttraction(const std::string& name, const std::string& info,
@@ -63,15 +64,15 @@ public:
 	int updateAttraction(int id, const std::string& name, const std::string& info,
 		const std::array<double, 2>& position, int tag, bool visable);
 	
-    //µÀÂ·²Ù×÷
+    //ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
     nlohmann::json getPaths(int from);
     nlohmann::json getAllPaths()const;
 	void addPath(std::string name,int from, int to, double length, bool walk, bool sharebike, bool bus);
 	void deletePath(int id);
 	void updatePath(int id,std::string name, int from, int to, double length, bool walk, bool sharebike, bool bus);
 	 
-	//Íê³É×î¶ÌÂ·Ïà¹Ø²Ù×÷
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½Ø²ï¿½ï¿½ï¿½
     //nlohmann::json getShortestPath(int from, int to);
-	nlohmann::json getShortestPath(int from, int to, bool walk=true, bool sharebike=true, bool bus=true);//ÏÞÖÆ½»Í¨·½Ê½
+	nlohmann::json getShortestPath(int from, int to, bool walk=true, bool sharebike=true, bool bus=true);//ï¿½ï¿½ï¿½Æ½ï¿½Í¨ï¿½ï¿½Ê½
     //nlohmann::json dijkstra(int from, int to);
 };
