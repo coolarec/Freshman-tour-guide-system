@@ -90,16 +90,18 @@ int main() {
         school_map.addPath(name, to, from, length, walk, sharebike, bus);
         res.set_content("OK", "text/plain");
         });
+
     svr.Post("/deletePath", [&](const Request& req, Response& res) {
         json j = json::parse(req.body);
         auto id = j.at("id").get<int>();
         school_map.deletePath(id);
         res.set_content("OK", "text/plain");
         });
+
 	svr.Post("/updatePath", [&](const Request& req, Response& res) {
-		json j = json::parse(req.body);
+        json j = json::parse(req.body);
 		auto id = j.at("id").get<int>();
-		auto name = j.at("name").get<std::string>();
+        auto name = j.at("name").get<std::string>();
 		auto from = j.at("from").get<int>();
 		auto to = j.at("to").get<int>();
 		auto length = j.at("length").get<double>();
@@ -109,25 +111,39 @@ int main() {
 		school_map.updatePath(id, name, from, to, length, walk, sharebike, bus);
 		res.set_content("OK", "text/plain");
 		});
+
 	svr.Post("/getShorestPath", [&](const Request& req, Response& res) {
 		json j = json::parse(req.body);
 		auto from = j.at("from").get<int>();
 		auto to = j.at("to").get<int>();
-        
         auto walk = true,sharebike=true,bus=true;
-        
-        
         if(j.contains("walk"))
             walk = j.at("walk").get<bool>();
         if(j.contains("sharebike"))
 		    sharebike = j.at("sharebike").get<bool>();
         if (j.contains("bus"))
             bus = j.at("bus").get<bool>();
-
 		auto path = school_map.getShortestPath(from, to,walk,sharebike,bus);
-		
         res.set_content(path.dump(), "application/json");
 		});
+
+
+    svr.Post("/getFastestPath", [&](const Request& req, Response& res) {
+        json j = json::parse(req.body);
+        auto from = j.at("from").get<int>();
+        auto to = j.at("to").get<int>();
+        auto walk = true, sharebike = true, bus = true;
+        if (j.contains("walk"))
+            walk = j.at("walk").get<bool>();
+        if (j.contains("sharebike"))
+            sharebike = j.at("sharebike").get<bool>();
+        if (j.contains("bus"))
+            bus = j.at("bus").get<bool>();
+        //std::cout << to << std::endl;
+        auto path = school_map.getFastestPath(from, to, walk, sharebike, bus);
+
+        res.set_content(path.dump(), "application/json");
+        });
 
     //¼àÌýÏà¹Ø¶Ë¿Ú
     svr.listen("127.0.0.1", 1234);

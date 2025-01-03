@@ -73,5 +73,6 @@ public:
 	//完成最短路相关操作
     //nlohmann::json getShortestPath(int from, int to);
 	nlohmann::json getShortestPath(int from, int to, bool walk=true, bool sharebike=true, bool bus=true);//限制交通方式
+    nlohmann::json getFastestPath(int from, int to, bool walk = true, bool sharebike = true, bool bus = true);
     //nlohmann::json dijkstra(int from, int to);
 };

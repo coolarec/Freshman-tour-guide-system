@@ -103,7 +103,7 @@ SchoolMap::SchoolMap() {
 void SchoolMap::loadFromFile(const std::string& attractionFilename, const std::string& pathFilename) {
 	std::ifstream attracttionStream(attractionFilename);
 	std::ifstream pathStream(pathFilename);
-	std::ifstream busStream("bus.json");
+	//std::ifstream busStream("bus.json");
 	// 如果文件不存在，创建一个新文件
 	if (!attracttionStream.is_open()) {
 		std::ofstream file(attractionFilename);
@@ -117,6 +117,9 @@ void SchoolMap::loadFromFile(const std::string& attractionFilename, const std::s
 	nlohmann::json j;
 	attracttionStream >> j;
 	//std::cout << j.dump(4) << std::endl;
+	attractions.clear();
+	destinations.clear();
+	paths.clear();
 	for (const auto& item : j) {
 		SchoolAttraction attraction = SchoolAttraction::from_json(item);
 		attractions[attraction.id] = attraction;
@@ -167,6 +170,7 @@ void SchoolMap::saveToFile(const std::string& attractionFilename,const std::stri
 		std::ofstream pathfile(pathFilename);
 		pathfile << k.dump(4);
 	}
+	loadFromFile();
 }
 
 //       _______ _______ _____            _____ _______ _____ ____  _   _  _____ 
@@ -208,7 +212,8 @@ void SchoolMap::addAttraction(const std::string& name, const std::string& info,
 	int id = ++current_attraction_id;
 	SchoolAttraction newAttraction(id, name, info, position, tag, visable);
 	attractions[id] = newAttraction;
-	std::cout << "addAttraction" << std::endl;
+	//std::cout << "addAttraction" << std::endl;
+
 	saveToFile();
 }
 
@@ -296,25 +301,39 @@ void SchoolMap::updatePath(int id, std::string name, int from, int to, double le
 //|_|  |_|______|  |_|  |_|  |_|\____/|_____/|_____/ 
 //                                                   
 //实现堆优化版本的最短路，采取dij算法 
-// 
+
+// 查找距离最短的路径
 nlohmann::json SchoolMap::getShortestPath(int from, int to, bool walk, bool sharebike, bool bus) {
 	nlohmann::json result;
 	result["count"] = -1;
+	result["distance"] = 0.0;
 	result["results"] = nlohmann::json::array();
-	if (!destinations.count(from) || !destinations.count(to)) {
+
+	//std::cout << "from" << std::endl;
+	//std::cout << attractions.count(from)<<std::endl;
+	//std::cout << "to" << std::endl;
+	//std::cout << attractions.count(to) << std::endl;
+
+	if (!attractions.count(from) || !attractions.count(to)) {
 		return result;
 	}
+
+	//std::cout << walk << ' ' << sharebike << ' ' << bus << std::endl;
+
 
 	std::vector<double> dist;
 	std::vector<SchoolPath> pre;
 	std::vector<bool> vis;
 	std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<std::pair<double, int>>> q;
-	dist.resize(current_attraction_id, INT_MAX);
-	pre.resize(current_attraction_id);
-	vis.resize(current_attraction_id, false);
+	dist.resize(current_attraction_id+1, 1e18);
+	pre.resize(current_attraction_id+1);
+	vis.resize(current_attraction_id+1, false);
+	//std::cout << current_attraction_id << std::endl;
 	dist[from] = 0;
 	q.push({ 0,from });
 	while (!q.empty()) {
+		std::cout << q.top().first << ' ' << q.top().second << std::endl;
+		//std::cout << q.top().first << ' ' << q.top().second << std::endl;
 		auto [d, u] = q.top();
 		q.pop();
 		if (vis[u]) {
@@ -322,13 +341,18 @@ nlohmann::json SchoolMap::getShortestPath(int from, int to, bool walk, bool shar
 		}
 		vis[u] = true;
 		for (const auto& path : destinations[u]) {
+			//std::cout <<"sssss :   "<< path.id << std::endl;
 			if (!walk && !path.walk)continue;
 			if (!sharebike && !path.sharebike) continue;
-			if (!bus && path.bus)continue;
+			if (!bus && !path.bus)continue;
+			//std::cout << path.id << std::endl;
 			if (dist[path.to] > dist[u] + path.length) {
 				dist[path.to] = dist[u] + path.length;
 				pre[path.to] = path;
+				//std::cout << "sda" << ' ' << path.id << std::endl;
+				//std::cout << path.to << ' ' << dist[path.to] << std::endl;
 				q.push({ dist[path.to],path.to });
+				std::cout << q.top().second << std::endl;
 			}
 		}
 	}
@@ -340,6 +364,70 @@ nlohmann::json SchoolMap::getShortestPath(int from, int to, bool walk, bool shar
 	}
 	std::reverse(res.begin(), res.end());
 	result["count"] = res.size();
+	result["distance"] = dist[to];
+	for (const auto& item : res) {
+		result["results"].push_back(item.to_json());
+	}
+	return result;
+}
+
+//查找最快速的路径 walk速度为60 sharebike速度为200 bus速度为500
+nlohmann::json SchoolMap::getFastestPath(int from, int to, bool walk, bool sharebike, bool bus) {
+	nlohmann::json result;
+	result["count"] = -1;
+	result["results"] = nlohmann::json::array();
+	
+	if (!attractions.count(from) || !attractions.count(to)) {
+		return result;
+	}
+
+	std::vector<double> time;
+	std::vector<double> dist;
+	std::vector<SchoolPath> pre;
+	std::vector<bool> vis;
+	std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<std::pair<double, int>>> q;
+	time.resize(current_attraction_id, INT_MAX);
+	pre.resize(current_attraction_id);
+	vis.resize(current_attraction_id, false);
+	dist.resize(current_attraction_id);
+	time[from] = 0;
+	dist[from] = 0;
+	q.push({ 0,from });
+	while (!q.empty()) {
+		auto& [d, u] = q.top();
+		q.pop();
+		if (vis[u]) {
+			continue;
+		}
+		vis[u] = true;
+		for (const auto& path : destinations[u]) {
+			if (!walk && !path.walk)continue;
+			if (!sharebike && !path.sharebike) continue;
+			if (!bus && path.bus)continue;
+			double walkTime = path.walk ? (path.length / 60.0) : 1e18;
+			double sharebikeTime = path.sharebike ? (path.length / 200.0) : 1e18;
+			double busTime = path.bus ? (path.length / 500.0) : 1e18;
+			double minTime = std::min<double>(walkTime,std::min(sharebikeTime, busTime));
+			if (time[path.to] > time[u] + minTime) {
+
+				dist[path.to] = dist[path.from]+path.length;
+				
+				time[path.to] = time[u] + minTime;
+				pre[path.to] = path;
+				q.push({ time[path.to],path.to });
+			}
+		}
+	}
+	std::vector<SchoolPath> res;
+	int u = to;
+	while (pre[u].from != 0) {
+		res.push_back(pre[u]);
+		u = pre[u].from;
+	}
+	std::reverse(res.begin(), res.end());
+	result["count"] = res.size();
+	result["time"] = time[to];
+	result["distance"] = dist[to];
 	for (const auto& item : res) {
 		result["results"].push_back(item.to_json());
 	}

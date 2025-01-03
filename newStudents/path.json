@@ -17,7 +17,7 @@
         "name": "林间小道",
         "sharebike": false,
         "to": 3,
-        "walk": false
+        "walk": true
     },
     {
         "bus": true,
@@ -47,6 +47,16 @@
         "name": "sadsda",
         "sharebike": true,
         "to": 4,
+        "walk": true
+    },
+    {
+        "bus": true,
+        "from": 1,
+        "id": 6,
+        "length": 41.0,
+        "name": "test1",
+        "sharebike": true,
+        "to": 3,
         "walk": true
     }
 ]
