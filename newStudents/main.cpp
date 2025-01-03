@@ -17,6 +17,9 @@ int main() {
         { "Access-Control-Allow-Headers", "*"},
         { "Content-Type", "application/json;charset=utf-8"}
         });
+	svr.Options(R"(.*)", [&](const Request& req, Response& res) {
+		res.status = 200;
+		});
 
     //对景点信息进行操作，实现增删改查
     svr.Get("/getArractions", [&](const Request& req, Response& res) {
