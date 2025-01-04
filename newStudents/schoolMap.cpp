@@ -306,33 +306,36 @@ void SchoolMap::updatePath(int id, std::string name, int from, int to, double le
 nlohmann::json SchoolMap::getShortestPath(int from, int to, bool walk, bool sharebike, bool bus) {
 	nlohmann::json result;
 	result["count"] = -1;
-	result["distance"] = 0.0;
-	result["results"] = nlohmann::json::array();
 
 	//std::cout << "from" << std::endl;
 	//std::cout << attractions.count(from)<<std::endl;
 	//std::cout << "to" << std::endl;
 	//std::cout << attractions.count(to) << std::endl;
 
+	//std::cout << from << ' ' << to << ' ' << walk << ' ' << sharebike << bus << std::endl;
+
 	if (!attractions.count(from) || !attractions.count(to)) {
 		return result;
 	}
 
-	//std::cout << walk << ' ' << sharebike << ' ' << bus << std::endl;
+	result["results"] = nlohmann::json::array();
 
 
+	std::vector<double> time;
 	std::vector<double> dist;
 	std::vector<SchoolPath> pre;
 	std::vector<bool> vis;
 	std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<std::pair<double, int>>> q;
-	dist.resize(current_attraction_id+1, 1e18);
-	pre.resize(current_attraction_id+1);
-	vis.resize(current_attraction_id+1, false);
-	//std::cout << current_attraction_id << std::endl;
+	time.resize(current_attraction_id + 1, 1e18);
+	pre.resize(current_attraction_id + 1);
+	vis.resize(current_attraction_id + 1, false);
+	dist.resize(current_attraction_id + 1,1e18);
+	time[from] = 0;
 	dist[from] = 0;
+
 	q.push({ 0,from });
 	while (!q.empty()) {
-		std::cout << q.top().first << ' ' << q.top().second << std::endl;
+		//std::cout << q.top().first << ' ' << q.top().second << std::endl;
 		//std::cout << q.top().first << ' ' << q.top().second << std::endl;
 		auto [d, u] = q.top();
 		q.pop();
@@ -340,19 +343,29 @@ nlohmann::json SchoolMap::getShortestPath(int from, int to, bool walk, bool shar
 			continue;
 		}
 		vis[u] = true;
-		for (const auto& path : destinations[u]) {
-			//std::cout <<"sssss :   "<< path.id << std::endl;
-			if (!walk && !path.walk)continue;
-			if (!sharebike && !path.sharebike) continue;
-			if (!bus && !path.bus)continue;
+		for (const auto path : destinations[u]) {
+			//std::cout << "sssss1 :   " << path.id << std::endl;
+			if (!((walk && path.walk) || (bus && path.bus) || (sharebike && path.sharebike))) {
+				continue;
+			}
+			//std::cout <<"sssss2  :   "<< path.id << std::endl;
+			double exceptTime = 1e18;
+			if (walk && path.walk)
+				exceptTime = std::min(exceptTime, path.length / 60);
+
+			if (sharebike && path.sharebike)
+				exceptTime = std::min(exceptTime, path.length / 200);
+
+			if (bus && path.bus)
+				exceptTime = std::min(exceptTime, path.length / 500);
 			//std::cout << path.id << std::endl;
+			
 			if (dist[path.to] > dist[u] + path.length) {
 				dist[path.to] = dist[u] + path.length;
-				pre[path.to] = path;
-				//std::cout << "sda" << ' ' << path.id << std::endl;
-				//std::cout << path.to << ' ' << dist[path.to] << std::endl;
+				pre[path.to] = path;	
+				time[path.to] = time[path.from] + exceptTime;
 				q.push({ dist[path.to],path.to });
-				std::cout << q.top().second << std::endl;
+				//std::cout << q.top().second << std::endl;
 			}
 		}
 	}
@@ -365,6 +378,7 @@ nlohmann::json SchoolMap::getShortestPath(int from, int to, bool walk, bool shar
 	std::reverse(res.begin(), res.end());
 	result["count"] = res.size();
 	result["distance"] = dist[to];
+	result["time"] = time[to];
 	for (const auto& item : res) {
 		result["results"].push_back(item.to_json());
 	}
@@ -375,21 +389,22 @@ nlohmann::json SchoolMap::getShortestPath(int from, int to, bool walk, bool shar
 nlohmann::json SchoolMap::getFastestPath(int from, int to, bool walk, bool sharebike, bool bus) {
 	nlohmann::json result;
 	result["count"] = -1;
-	result["results"] = nlohmann::json::array();
 	
 	if (!attractions.count(from) || !attractions.count(to)) {
 		return result;
 	}
+
+	result["results"] = nlohmann::json::array();
 
 	std::vector<double> time;
 	std::vector<double> dist;
 	std::vector<SchoolPath> pre;
 	std::vector<bool> vis;
 	std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<std::pair<double, int>>> q;
-	time.resize(current_attraction_id, INT_MAX);
-	pre.resize(current_attraction_id);
-	vis.resize(current_attraction_id, false);
-	dist.resize(current_attraction_id);
+	time.resize(current_attraction_id+1, 1e18);
+	pre.resize(current_attraction_id+1);
+	vis.resize(current_attraction_id+1, false);
+	dist.resize(current_attraction_id+1,1e18);
 	time[from] = 0;
 	dist[from] = 0;
 	q.push({ 0,from });
@@ -400,18 +415,25 @@ nlohmann::json SchoolMap::getFastestPath(int from, int to, bool walk, bool share
 			continue;
 		}
 		vis[u] = true;
-		for (const auto& path : destinations[u]) {
-			if (!walk && !path.walk)continue;
-			if (!sharebike && !path.sharebike) continue;
-			if (!bus && path.bus)continue;
-			double walkTime = path.walk ? (path.length / 60.0) : 1e18;
-			double sharebikeTime = path.sharebike ? (path.length / 200.0) : 1e18;
-			double busTime = path.bus ? (path.length / 500.0) : 1e18;
-			double minTime = std::min<double>(walkTime,std::min(sharebikeTime, busTime));
-			if (time[path.to] > time[u] + minTime) {
+		for (const auto path : destinations[u]) {
+			if (!((walk && path.walk) || (bus && path.bus) || (sharebike && path.sharebike))) {
+				continue;
+			}
+			//std::cout <<"sssss :   "<< path.id << std::endl;
+			double minTime = 1e18;
 
+			if (walk && path.walk)
+				minTime = std::min(minTime, path.length / 60);
+
+			if (sharebike && path.sharebike)
+				minTime = std::min(minTime, path.length / 200);
+
+			if (bus && path.bus)
+				minTime = std::min(minTime, path.length / 500);
+			
+			//std::cout << path.id << std::endl;
+			if (time[path.to] > time[u] + minTime) {
 				dist[path.to] = dist[path.from]+path.length;
-				
 				time[path.to] = time[u] + minTime;
 				pre[path.to] = path;
 				q.push({ time[path.to],path.to });

@@ -119,7 +119,6 @@ int main() {
 
         auto walk = true, sharebike = true, bus = true;
 
-
         if (j.contains("walk"))
             walk = j.at("walk").get<bool>();
         if (j.contains("sharebike"))
@@ -131,7 +130,24 @@ int main() {
 
         res.set_content(path.dump(), "application/json");
         });
+    svr.Post("/getFastestPath", [&](const Request& req, Response& res) {
+        json j = json::parse(req.body);
+        auto from = j.at("from").get<int>();
+        auto to = j.at("to").get<int>();
 
+        auto walk = true, sharebike = true, bus = true;
+
+        if (j.contains("walk"))
+            walk = j.at("walk").get<bool>();
+        if (j.contains("sharebike"))
+            sharebike = j.at("sharebike").get<bool>();
+        if (j.contains("bus"))
+            bus = j.at("bus").get<bool>();
+
+        auto path = school_map.getFastestPath(from, to, walk, sharebike, bus);
+
+        res.set_content(path.dump(), "application/json");
+        });
     //¼àÌıÏà¹Ø¶Ë¿Ú
     svr.listen("127.0.0.1", 1234);
     return 0;
