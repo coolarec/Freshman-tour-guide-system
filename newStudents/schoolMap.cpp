@@ -470,13 +470,13 @@ nlohmann::json SchoolMap::getAllPath(int from, int to, bool walk, bool sharebike
 	result["count"]=0;
 	std::function<void(int,double,double)> dfs = [&](int u,double distance,double time) {
 		if (u == to) {
-			result["count"] = result["count"]+1;
+			result["count"] = result["count"].get<int>() +1;
 			nlohmann::json nPath;
 			nPath["result"] = nlohmann::json::array();
 			nPath["count"] = 0;
 			
 			for (auto path : tmp) {
-				nPath["count"] = nPath["count"] + 1;
+				nPath["count"] = nPath["count"].get<int>() + 1;
 				nPath["result"].push_back(path.to_json());
 			};
 			nPath["distance"] = distance;
