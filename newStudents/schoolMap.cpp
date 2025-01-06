@@ -455,3 +455,64 @@ nlohmann::json SchoolMap::getFastestPath(int from, int to, bool walk, bool share
 	}
 	return result;
 }
+
+//获取所有的路径
+nlohmann::json SchoolMap::getAllPath(int from, int to, bool walk, bool sharebike, bool bus) {
+	nlohmann::json result;
+	result["count"] = -1;
+	if (!attractions.count(from) || !attractions.count(to)) {
+		return result;
+	}
+	result["results"] = nlohmann::json::array();
+	//nlohmann::json tmp;
+	std::vector<SchoolPath> tmp;
+	std::vector<int> vis(current_attraction_id);
+	result["count"]=0;
+	std::function<void(int,double,double)> dfs = [&](int u,double distance,double time) {
+		if (u == to) {
+			result["count"] = result["count"]+1;
+			nlohmann::json nPath;
+			nPath["result"] = nlohmann::json::array();
+			nPath["count"] = 0;
+			
+			for (auto path : tmp) {
+				nPath["count"] = nPath["count"] + 1;
+				nPath["result"].push_back(path.to_json());
+			};
+			nPath["distance"] = distance;
+			nPath["time"] = time;
+
+			result["results"].push_back(nPath);
+			return;
+		}
+		for (auto const path : destinations[u]) {
+			if (!(
+				(walk && path.walk) || 
+				(bus && path.bus) || 
+				(sharebike && path.sharebike))) {
+				continue;
+			}
+			if (vis[path.to])continue;
+			double minTime = 1e18;
+
+			if (walk && path.walk)
+				minTime = std::min(minTime, path.length / 60);
+
+			if (sharebike && path.sharebike)
+				minTime = std::min(minTime, path.length / 200);
+
+			if (bus && path.bus)
+				minTime = std::min(minTime, path.length / 500);
+
+			vis[path.to] = 1;
+			tmp.push_back(path);
+			dfs(path.to,distance+path.length,minTime);
+			vis[path.to] = 0;
+			tmp.pop_back();
+		}
+		return;
+		};
+	vis[from] = 1;
+	dfs(from,0,0);
+	return result;
+}
