@@ -2,61 +2,21 @@
     {
         "bus": false,
         "from": 1,
-        "id": 1,
-        "length": 4.9,
-        "name": "光明路",
-        "sharebike": true,
-        "to": 2,
+        "id": 8,
+        "length": 23.0,
+        "name": "test",
+        "sharebike": false,
+        "to": 10,
         "walk": true
     },
     {
         "bus": false,
-        "from": 2,
-        "id": 2,
-        "length": 34.45,
-        "name": "林间小道",
+        "from": 11,
+        "id": 9,
+        "length": 10.0,
+        "name": "tsts",
         "sharebike": false,
-        "to": 3,
-        "walk": true
-    },
-    {
-        "bus": true,
-        "from": 4,
-        "id": 3,
-        "length": 48.93,
-        "name": "test1",
-        "sharebike": true,
-        "to": 5,
-        "walk": true
-    },
-    {
-        "bus": true,
-        "from": 4,
-        "id": 4,
-        "length": 45.0,
-        "name": "sadsda",
-        "sharebike": true,
-        "to": 5,
-        "walk": true
-    },
-    {
-        "bus": true,
-        "from": 5,
-        "id": 5,
-        "length": 45.0,
-        "name": "sadsda",
-        "sharebike": true,
-        "to": 4,
-        "walk": true
-    },
-    {
-        "bus": true,
-        "from": 1,
-        "id": 6,
-        "length": 41.0,
-        "name": "test1",
-        "sharebike": true,
-        "to": 3,
-        "walk": true
+        "to": 10,
+        "walk": false
     }
 ]

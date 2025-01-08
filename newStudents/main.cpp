@@ -148,7 +148,7 @@ int main() {
 
         res.set_content(path.dump(), "application/json");
         });
-    svr.Post("/getAllPath", [&](const Request& req, Response& res) {
+    svr.Post("/getAllMethods", [&](const Request& req, Response& res) {
         json j = json::parse(req.body);
         auto from = j.at("from").get<int>();
         auto to = j.at("to").get<int>();
@@ -162,7 +162,7 @@ int main() {
         if (j.contains("bus"))
             bus = j.at("bus").get<bool>();
 
-        auto paths = school_map.getAllPath(from, to, walk, sharebike, bus);
+        auto paths = school_map.getAllMethods(from, to, walk, sharebike, bus);
 
         res.set_content(paths.dump(), "application/json");
         });

@@ -19,6 +19,7 @@ std::vector<int> BusRoute::busRoute::getRoute(int from, int to) const {
 	}
 	return res;
 }
+
 void BusRoute::loadFromFile(const std::string busFilename) {
 	std::ifstream busFile(busFilename);
 	if (!busFile) {

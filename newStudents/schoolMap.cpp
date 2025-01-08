@@ -457,7 +457,7 @@ nlohmann::json SchoolMap::getFastestPath(int from, int to, bool walk, bool share
 }
 
 //获取所有的路径
-nlohmann::json SchoolMap::getAllPath(int from, int to, bool walk, bool sharebike, bool bus) {
+nlohmann::json SchoolMap::getAllMethods(int from, int to, bool walk, bool sharebike, bool bus) {
 	nlohmann::json result;
 	result["count"] = -1;
 	if (!attractions.count(from) || !attractions.count(to)) {

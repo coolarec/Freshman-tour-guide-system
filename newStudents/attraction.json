@@ -1,101 +1,35 @@
 [
     {
         "id": 1,
-        "info": "更新后",
+        "info": "test",
         "name": "测试更新功能",
         "position": [
-            1.0,
-            2.0
+            10.0,
+            6.0
         ],
-        "tag": 0,
+        "tag": 1,
         "visable": true
     },
     {
-        "id": 2,
-        "info": "The main administrative building of the school.",
-        "name": "Main Building",
+        "id": 10,
+        "info": "jiaoxuelou",
+        "name": "教学楼",
         "position": [
-            1.0,
-            2.0
+            10.0,
+            4.0
         ],
-        "tag": 5,
+        "tag": 1,
         "visable": true
     },
     {
-        "id": 3,
-        "info": "The main administrative building of the school.",
-        "name": "Main Building",
+        "id": 11,
+        "info": "hahaha",
+        "name": "ahha",
         "position": [
-            1.0,
-            2.0
+            7.0,
+            4.0
         ],
-        "tag": 5,
-        "visable": true
-    },
-    {
-        "id": 4,
-        "info": "The main administrative building of the school.",
-        "name": "Main Building",
-        "position": [
-            1.0,
-            2.0
-        ],
-        "tag": 5,
-        "visable": true
-    },
-    {
-        "id": 5,
-        "info": "The main administrative building of the school.",
-        "name": "Main Building",
-        "position": [
-            1.0,
-            2.0
-        ],
-        "tag": 5,
-        "visable": true
-    },
-    {
-        "id": 6,
-        "info": "The main administrative building of the school.",
-        "name": "Main Building",
-        "position": [
-            1.0,
-            2.0
-        ],
-        "tag": 5,
-        "visable": true
-    },
-    {
-        "id": 7,
-        "info": "The main administrative building of the school.",
-        "name": "Main Building",
-        "position": [
-            1.0,
-            2.0
-        ],
-        "tag": 5,
-        "visable": true
-    },
-    {
-        "id": 8,
-        "info": "The main administrative building of the school.",
-        "name": "Main Building",
-        "position": [
-            1.0,
-            2.0
-        ],
-        "tag": 5,
-        "visable": true
-    },
-    {
-        "id": 9,
-        "info": "The main administrative building of the school.",
-        "name": "Main Building",
-        "position": [
-            1.0,
-            2.0
-        ],
-        "tag": 5,
+        "tag": 1,
         "visable": true
     }
 ]
