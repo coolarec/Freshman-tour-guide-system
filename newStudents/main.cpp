@@ -166,6 +166,16 @@ int main() {
 
         res.set_content(paths.dump(), "application/json");
         });
+    svr.Post("/check", [&](const Request& req, Response& res) {
+        json j = json::parse(req.body);
+        json resp;
+        resp["status"] = 0;
+        auto pwd = j.at("pwd").get<std::string>();
+        if (pwd == "admin")
+            resp["status"] = 1;
+        res.set_content(resp.dump(), "application/json");
+        });
+
     //¼àÌıÏà¹Ø¶Ë¿Ú
     svr.listen("127.0.0.1", 1234);
     return 0;
